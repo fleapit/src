@@ -1,19 +1,32 @@
-(function(){
-    angular.module('Fleapit', [''])
-        .controller('myController', ['$scope', '$http',
-									function($scope, $http) {
-			$http.get('')
-				.success(function(data, status, headers, config) {
-				$scope.user = data;
-				$scope.error = "";
-			})
-			.error(function(data, status, headers, config) {
-				$scope.user = {};
-				$scope.error = data;
-			});
-		}]);
+var app = angular.module('Fleapit', ['ui.router']);
 
+app.config(function($stateProvider, $urlRouterProvider) {
 
+    // For any unmatched url, send to /index
+    $urlRouterProvider.otherwise("/login");
 
+    $stateProvider
+        .state('login', {
+            url: "/login",
+            templateUrl: "login.html",
+            controller: "LoginCheckController"
+        })
+        .state('SuccessPage', {
+            url: "/SuccessPage",
+            templateUrl: "SuccessPage.html",
+            controller: "LoginCheckController"
+        });
+});
 
-}());
+app.controller('LoginCheckController', ['$scope', '$location', LoginCheckController]);
+
+function LoginCheckController($scope, $location) {
+
+    $scope.LoginCheck = function() {
+        $location.path("SuccessPage");
+    };
+
+    $scope.go = function(path) {
+        $location.path("/SuccessPage");
+    };
+}
